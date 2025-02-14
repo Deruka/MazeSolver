@@ -7,18 +7,10 @@ def main():
     # Create Points
     p1 = Point(50, 50)
     p2 = Point(200, 200)
-    p3 = Point(200, 200)
-    p4 = Point(350, 350)
-    p5 = Point(350, 350)
-    p6 = Point(500, 500)
-    # Create Lines
-    line1 = Line(p1, p2)
-    line2 = Line(p3, p4)
-    line3 = Line(p5, p6)
-    # Draw the Lines
-    win.draw_line(line1, "red")
-    win.draw_line(line2, "blue")
-    win.draw_line(line3, "green")
+    p3 = Point(200, 50)
+    p4 = Point(350, 200)
+    p5 = Point(350, 50)
+    p6 = Point(500, 200)
     # Create Cells
     c1 = Cell(p1, p2, win)
     c2 = Cell(p3, p4, win)
@@ -29,9 +21,12 @@ def main():
     c3.has_left_wall = False
     c3.has_bottom_wall = False
     # Draw Cells
-    c1.draw(Point(50, 50), Point(200, 200))
-    c2.draw(Point(200, 50), Point(350, 200))
-    c3.draw(Point(350, 50), Point(500, 200))
+    c1.draw(p1, p2)
+    c2.draw(p3, p4)
+    c3.draw(p5, p6)
+    # move through cells
+    c1.draw_move(c2)
+    c2.draw_move(c3)
     # wait to close the window
     win.wait_for_close()
 
