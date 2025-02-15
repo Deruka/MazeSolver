@@ -1,7 +1,7 @@
 from drawing import Line, Point
 
 class Cell:
-    def __init__(self, point1, point2, window):
+    def __init__(self, point1, point2, window=None):
         self.has_left_wall = True
         self.has_right_wall = True
         self.has_top_wall = True
@@ -17,6 +17,10 @@ class Cell:
         self.__y1 = tlcorner.y
         self.__x2 = brcorner.x
         self.__y2 = brcorner.y
+
+        if self.__win is None:
+            return
+
         if self.has_left_wall:
             p1 = Point(self.__x1, self.__y1)
             p2 = Point(self.__x1, self.__y2)

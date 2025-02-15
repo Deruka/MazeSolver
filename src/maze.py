@@ -1,9 +1,16 @@
 from cell import Cell
-from drawing import Point, Line
+from drawing import Point
 import time
 
 class Maze:
-    def __init__(self, x1, y1, num_rows, num_cols, cell_size_x, cell_size_y, win):
+    def __init__(self, x1, y1, num_rows, num_cols, cell_size_x, cell_size_y, win=None):
+        if num_rows <= 0 or num_cols <= 0:
+            raise ValueError("Number of rows and columns must be positive")
+        if cell_size_x <= 0 or cell_size_y <= 0:
+            raise ValueError("Cell sizes must be positive")
+        if x1 < 0 or y1 < 0:
+            raise ValueError("Starting positions must be non-negative")
+        
         self.__x1 = x1
         self.__y1 = y1
         self.__num_rows = num_rows
@@ -30,9 +37,10 @@ class Maze:
 
             self._cells.append(cell_list)
         
-        for i in range(self.__num_cols):
-            for j in range(self.__num_rows):
-                self._draw_cell(i, j)
+        if self.__win is not None:
+            for i in range(self.__num_cols):
+                for j in range(self.__num_rows):
+                    self._draw_cell(i, j)
     
     def _draw_cell(self, i, j):
         x1 = self.__x1 + (i * self.__cell_size_x)
