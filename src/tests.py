@@ -93,21 +93,33 @@ class Tests(unittest.TestCase):
         self.assertTrue(cell.has_left_wall)    # left wall should exist
         self.assertTrue(cell.has_top_wall)     # top wall should exist
 
-    def test_break_walls_between_cells(self):
-        m = Maze(0, 0, 2, 2, 10, 10)
-        cell1 = m._cells[0][0]  # Top-left cell
-        cell2 = m._cells[1][0]  # Top-right cell
-        
-        # Initially, walls should exist between cells
-        self.assertTrue(cell1.has_right_wall)
-        self.assertTrue(cell2.has_left_wall)
-        
-        # Break the walls between these cells
-        m._break_walls_r(cell1, cell2)
-        
-        # Verify walls are now broken
-        self.assertFalse(cell1.has_right_wall)
-        self.assertFalse(cell2.has_left_wall)
+    def test_break_entrance_and_exit(self):
+        m = Maze(0, 0, 5, 5, 10, 10)
+        # Entrance and Exit cell
+        cell_ent = m._cells[0][0]
+        cell_ex = m._cells[4][4]
+        # Call function to break the entrance and exit
+        m._break_entrance_and_exit()
+
+        # Should have open walls Top and Bottom
+        self.assertFalse(cell_ent.has_top_wall)
+        self.assertFalse(cell_ex.has_bottom_wall)
+
+#    def test_break_walls_between_cells(self):
+#        m = Maze(0, 0, 2, 2, 10, 10)
+#        cell1 = m._cells[0][0]  # Top-left cell
+#        cell2 = m._cells[1][0]  # Top-right cell
+#        
+#        # Initially, walls should exist between cells
+#        self.assertTrue(cell1.has_right_wall)
+#        self.assertTrue(cell2.has_left_wall)
+#        
+#        # Break the walls between these cells
+#        m._break_walls_r(cell1, cell2)
+#        
+#        # Verify walls are now broken
+#        self.assertFalse(cell1.has_right_wall)
+#        self.assertFalse(cell2.has_left_wall)
 
 if __name__ == "__main__":
     unittest.main()

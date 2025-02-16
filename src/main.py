@@ -1,8 +1,22 @@
 from window import Window
 from drawing import Point, Line
 from cell import Cell
+from maze import Maze
 
 def main():
+    # Create window
+    win = Window(800, 600)
+    # Create Maze
+    m = Maze(10, 10, 6, 6, 40, 40, win)
+    # break entrance and exit
+    m._break_entrance_and_exit()
+    # wait to close the window
+    win.wait_for_close()
+
+main()
+
+
+def old_main_for_save():
     win = Window(800, 600)
     # Create Points
     p1 = Point(50, 50)
@@ -29,5 +43,3 @@ def main():
     c2.draw_move(c3)
     # wait to close the window
     win.wait_for_close()
-
-main()
