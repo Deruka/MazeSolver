@@ -126,3 +126,62 @@ class Maze:
             for cell in list:
                 cell.visited = False
     
+    def solve(self):
+        return self._solve_r(0, 0)
+    
+    def _solve_r(self, i, j):
+        self._animate()
+        self._cells[i][j].visited = True
+        if self._cells[i][j] == self._cells[self.__num_cols - 1][self.__num_rows- 1]:
+            return True
+        # Moving into each direction to solve the randomized Maze
+        # Moving down:
+        if (
+            self._is_valid_position(i, j + 1) and 
+            not self._cells[i][j + 1].visited and 
+            not self._cells[i][j].has_bottom_wall and 
+            not self._cells[i][j + 1].has_top_wall
+        ):
+            self._cells[i][j].draw_move(self._cells[i][j + 1])
+            valid = self._solve_r(i, j + 1)
+            if valid:
+                return valid
+            self._cells[i][j + 1].draw_move(self._cells[i][j], undo=True)
+        # Moving up:
+        if (
+            self._is_valid_position(i, j - 1) and 
+            not self._cells[i][j - 1].visited and 
+            not self._cells[i][j].has_top_wall and 
+            not self._cells[i][j - 1].has_bottom_wall
+        ):
+            self._cells[i][j].draw_move(self._cells[i][j - 1])
+            valid = self._solve_r(i, j - 1)
+            if valid:
+                return valid
+            self._cells[i][j - 1].draw_move(self._cells[i][j], undo=True)
+        # Moving left:
+        if (
+            self._is_valid_position(i - 1, j) and 
+            not self._cells[i - 1][j].visited and 
+            not self._cells[i][j].has_left_wall and 
+            not self._cells[i - 1][j].has_right_wall
+        ):
+            self._cells[i][j].draw_move(self._cells[i - 1][j])
+            valid = self._solve_r(i - 1, j)
+            if valid:
+                return valid
+            self._cells[i - 1][j].draw_move(self._cells[i][j], undo=True)
+        # Moving right:
+        if (
+            self._is_valid_position(i + 1, j) and 
+            not self._cells[i + 1][j].visited and 
+            not self._cells[i][j].has_right_wall and 
+            not self._cells[i + 1][j].has_left_wall
+        ):
+            self._cells[i][j].draw_move(self._cells[i + 1][j])
+            valid = self._solve_r(i + 1, j)
+            if valid:
+                return valid
+            self._cells[i + 1][j].draw_move(self._cells[i][j], undo=True)
+        # no path worked
+        return False
