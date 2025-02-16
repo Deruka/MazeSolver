@@ -7,9 +7,10 @@ def main():
     # Create window
     win = Window(800, 600)
     # Create Maze
-    m = Maze(10, 10, 6, 6, 40, 40, win)
+    m = Maze(10, 10, 12, 17, 45, 45, win, seed=0)
     # break entrance and exit
     m._break_entrance_and_exit()
+    m._break_walls_r(0, 0)
     # wait to close the window
     win.wait_for_close()
 

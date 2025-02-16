@@ -11,6 +11,7 @@ class Cell:
         self.__x2 = point2.x
         self.__y2 = point2.y
         self.__win = window
+        self.visited = False
 
     def draw(self, tlcorner, brcorner):
         self.__x1 = tlcorner.x

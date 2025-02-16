@@ -1,9 +1,10 @@
 from cell import Cell
 from drawing import Point
 import time
+import random
 
 class Maze:
-    def __init__(self, x1, y1, num_rows, num_cols, cell_size_x, cell_size_y, win=None):
+    def __init__(self, x1, y1, num_rows, num_cols, cell_size_x, cell_size_y, win=None, seed=None):
         if num_rows <= 0 or num_cols <= 0:
             raise ValueError("Number of rows and columns must be positive")
         if cell_size_x <= 0 or cell_size_y <= 0:
@@ -18,6 +19,12 @@ class Maze:
         self.__cell_size_x = cell_size_x
         self.__cell_size_y = cell_size_y
         self.__win = win
+
+        if not seed:
+            self._seed = random.seed(seed)
+        else:
+            self._seed = seed
+
         self._cells = []
         self._create_cells()
 
@@ -64,3 +71,51 @@ class Maze:
         self._cells[self.__num_cols - 1][self.__num_rows- 1].has_bottom_wall = False
         if self.__win is not None:
             self._draw_cell(self.__num_cols - 1, self.__num_rows - 1)
+
+    def _is_valid_position(self, i, j):
+        return (
+            i >= 0 and 
+            i < self.__num_cols and 
+            j >= 0 and 
+            j < self.__num_rows
+        )
+
+    def _break_walls_r(self, i, j):
+        self._cells[i][j].visited = True
+        while True:
+            possible_directions = []
+            # left cell
+            if self._is_valid_position(i- 1, j) and not self._cells[i - 1][j].visited:
+                possible_directions.append((i - 1, j))
+            # right cell
+            if self._is_valid_position(i + 1, j) and not self._cells[i + 1][j].visited:
+                possible_directions.append((i + 1, j))
+            # top cell
+            if self._is_valid_position(i, j - 1) and not self._cells[i][j - 1].visited:
+                possible_directions.append((i, j - 1))
+            # bottom cell
+            if self._is_valid_position(i, j + 1) and not self._cells[i][j + 1].visited:
+                possible_directions.append((i, j + 1))
+            if len(possible_directions) == 0:
+                self._draw_cell(i, j)
+                return
+            # choose new direction
+            direction = random.choice(possible_directions)
+            new_i, new_j = direction
+            # If new_i is less than i, we moved left
+            if new_i < i:
+                self._cells[i][j].has_left_wall = False
+                self._cells[new_i][new_j].has_right_wall = False
+            # If new_i is greater than i, we moved right
+            elif new_i > i:
+                self._cells[i][j].has_right_wall = False
+                self._cells[new_i][new_j].has_left_wall = False
+            # If new_j is less than j, we moved up
+            elif new_j < j:
+                self._cells[i][j].has_top_wall = False
+                self._cells[new_i][new_j].has_bottom_wall = False
+            # If new_j is greater than j, we moved down
+            elif new_j > j:
+                self._cells[i][j].has_bottom_wall = False
+                self._cells[new_i][new_j].has_top_wall = False
+            self._break_walls_r(new_i, new_j)
