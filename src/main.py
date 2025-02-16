@@ -11,6 +11,7 @@ def main():
     # break entrance and exit
     m._break_entrance_and_exit()
     m._break_walls_r(0, 0)
+    m._reset_cells_visited()
     # wait to close the window
     win.wait_for_close()
 

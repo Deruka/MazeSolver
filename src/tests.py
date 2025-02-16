@@ -105,21 +105,20 @@ class Tests(unittest.TestCase):
         self.assertFalse(cell_ent.has_top_wall)
         self.assertFalse(cell_ex.has_bottom_wall)
 
-#    def test_break_walls_between_cells(self):
-#        m = Maze(0, 0, 2, 2, 10, 10)
-#        cell1 = m._cells[0][0]  # Top-left cell
-#        cell2 = m._cells[1][0]  # Top-right cell
-#        
-#        # Initially, walls should exist between cells
-#        self.assertTrue(cell1.has_right_wall)
-#        self.assertTrue(cell2.has_left_wall)
-#        
-#        # Break the walls between these cells
-#        m._break_walls_r(cell1, cell2)
-#        
-#        # Verify walls are now broken
-#        self.assertFalse(cell1.has_right_wall)
-#        self.assertFalse(cell2.has_left_wall)
+    def test_reset_visited_after_breaking_walls(self):
+        m = Maze(0, 0, 5, 5, 10, 10)
+        m._break_entrance_and_exit()
+        m._break_walls_r(0, 0)
+        # Verify that visited is set to True for the specific test case cell
+        for list in m._cells:
+            for cell in list:
+                self.assertTrue(cell.visited)
+        # Reset visited
+        m._reset_cells_visited()
+        # Verify that visited is set to False for the specific test case cell
+        for list in m._cells:
+            for cell in list:
+                self.assertFalse(cell.visited)
 
 if __name__ == "__main__":
     unittest.main()

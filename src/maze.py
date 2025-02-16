@@ -97,7 +97,8 @@ class Maze:
             if self._is_valid_position(i, j + 1) and not self._cells[i][j + 1].visited:
                 possible_directions.append((i, j + 1))
             if len(possible_directions) == 0:
-                self._draw_cell(i, j)
+                if self.__win is not None:
+                    self._draw_cell(i, j)
                 return
             # choose new direction
             direction = random.choice(possible_directions)
@@ -119,3 +120,9 @@ class Maze:
                 self._cells[i][j].has_bottom_wall = False
                 self._cells[new_i][new_j].has_top_wall = False
             self._break_walls_r(new_i, new_j)
+
+    def _reset_cells_visited(self):
+        for list in self._cells:
+            for cell in list:
+                cell.visited = False
+    
