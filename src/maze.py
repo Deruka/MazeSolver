@@ -19,6 +19,9 @@ class Maze:
         self.__cell_size_x = cell_size_x
         self.__cell_size_y = cell_size_y
         self.__win = win
+        self.__anim_solve = False
+        self.__anim_create = False
+        self.__anim_undo = False
 
         if not seed:
             self._seed = random.seed(seed)
@@ -47,6 +50,7 @@ class Maze:
         if self.__win is not None:
             for i in range(self.__num_cols):
                 for j in range(self.__num_rows):
+                    self.__anim_create = True
                     self._draw_cell(i, j)
     
     def _draw_cell(self, i, j):
@@ -61,15 +65,27 @@ class Maze:
 
     def _animate(self):
         self.__win.redraw()
-        time.sleep(0.05)
+        if self.__anim_undo:
+            time.sleep(0.17)
+        elif self.__anim_solve:
+            time.sleep(0.08)
+        elif self.__anim_create:
+            time.sleep(0.001)
+        else:
+            time.sleep(0.02)
+        self.__anim_create = False
+        self.__anim_solve = False
+        self.__anim_undo = False
 
     def _break_entrance_and_exit(self):
         self._cells[0][0].has_top_wall = False
         if self.__win is not None:
+            self.__anim_create = True
             self._draw_cell(0, 0)
 
         self._cells[self.__num_cols - 1][self.__num_rows- 1].has_bottom_wall = False
         if self.__win is not None:
+            self.__anim_create = True
             self._draw_cell(self.__num_cols - 1, self.__num_rows - 1)
 
     def _is_valid_position(self, i, j):
@@ -98,6 +114,7 @@ class Maze:
                 possible_directions.append((i, j + 1))
             if len(possible_directions) == 0:
                 if self.__win is not None:
+                    self.__anim_create = True
                     self._draw_cell(i, j)
                 return
             # choose new direction
@@ -130,6 +147,7 @@ class Maze:
         return self._solve_r(0, 0)
     
     def _solve_r(self, i, j):
+        self.__anim_solve = True
         self._animate()
         self._cells[i][j].visited = True
         if self._cells[i][j] == self._cells[self.__num_cols - 1][self.__num_rows- 1]:
@@ -146,6 +164,7 @@ class Maze:
             valid = self._solve_r(i, j + 1)
             if valid:
                 return valid
+            self.__anim_undo = True
             self._cells[i][j + 1].draw_move(self._cells[i][j], undo=True)
         # Moving up:
         if (
@@ -158,6 +177,7 @@ class Maze:
             valid = self._solve_r(i, j - 1)
             if valid:
                 return valid
+            self.__anim_undo = True
             self._cells[i][j - 1].draw_move(self._cells[i][j], undo=True)
         # Moving left:
         if (
@@ -170,6 +190,7 @@ class Maze:
             valid = self._solve_r(i - 1, j)
             if valid:
                 return valid
+            self.__anim_undo = True
             self._cells[i - 1][j].draw_move(self._cells[i][j], undo=True)
         # Moving right:
         if (
@@ -182,6 +203,7 @@ class Maze:
             valid = self._solve_r(i + 1, j)
             if valid:
                 return valid
+            self.__anim_undo = True
             self._cells[i + 1][j].draw_move(self._cells[i][j], undo=True)
         # no path worked
         return False
